@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cartoon Prompt Cards</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg1:#dbeafe;
+  --bg2:#fef3c7;
+  --card:#ffffff;
+  --prompt:#ecfeff;
+  --btn:#fde047;
+  --text:#000;
+}
+
+body.dark{
+  --bg1:#151c3be2;
+  --bg2:#1a2a51b8;
+  --blob1:#1e293b;
+  --blob2:#4b5a95;
+}
+
+
+
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  padding:90px 40px 40px;
+
+  /* 🎨 AESTHETIC BACKGROUND */
+  background:
+    linear-gradient(135deg,var(--bg1),var(--bg2));
+
+  transition:0.3s;
+}
+
+/* TOP BAR */
+.topbar{
+  position:fixed;
+  top:20px;
+  left:20px;
+  right:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:10;
+}
+
+.logo{
+  font-weight:700;
+  font-size:22px;
+  background:#000;
+  color:#fff;
+  padding:6px 16px;
+  border-radius:16px;
+}
+
+.toggle{
+  cursor:pointer;
+  padding:10px 16px;
+  border:3px solid #000;
+  border-radius:16px;
+  background:var(--btn);
+  font-weight:600;
+  box-shadow:4px 4px 0 #000;
+}
+
+/* GRID */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:30px;
+}
+
+/* CARD */
+.card{
+  max-width:300px;
+  margin:auto;
+  background:var(--card);
+  border:4px solid #000;
+  border-radius:28px;
+  padding:16px;
+  box-shadow:8px 8px 0 #000;
+}
+
+/* IMAGE */
+.card img{
+  width:100%;
+  aspect-ratio: 2 / 3;   /* 👈 2:3 ratio */
+  object-fit: cover;
+  border-radius:18px;
+  border:2px solid #000;
+}
+
+
+
+/* 🔒 FIXED PROMPT SIZE (NO CARD STRETCH) */
+.prompt-box{
+  margin-top:14px;
+  background:var(--prompt);
+  border:3px dashed #000;
+  border-radius:18px;
+  padding:12px;
+  font-size:14px;
+  line-height:1.6;
+
+  height:92px;            
+  overflow:hidden;
+  position:relative;
+}
+
+/* FADE EFFECT FOR LONG TEXT */
+.prompt-box::after{
+  content:"";
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:28px;
+  background:linear-gradient(transparent,var(--prompt));
+}
+
+/* BUTTON */
+.copy-btn{
+  margin-top:12px;
+  width:100%;
+  padding:10px;
+  border-radius:16px;
+  border:3px solid #000;
+  background:var(--btn);
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:4px 4px 0 #000;
+  transition:0.2s;
+}
+
+.copy-btn.copied{
+  background:#86efac;
+}
+
+@media (min-width:768px){
+  .card img{
+    height:220px;   
+  }
+}
+
+/* 🍏 iOS STYLE TOGGLE */
+.toggle-ios{
+  position:relative;
+}
+
+.toggle-ios input{
+  display:none;
+}
+
+.toggle-ios label{
+  width:52px;
+  height:30px;
+  background:#e5e7eb;
+  border-radius:999px;
+  display:block;
+  position:relative;
+  cursor:pointer;
+  border:2px solid #000;
+  box-shadow:3px 3px 0 #000;
+  transition:0.3s;
+}
+
+/* knob */
+.toggle-ios label::after{
+  content:"";
+  width:22px;
+  height:22px;
+  background:#fff;
+  border-radius:50%;
+  position:absolute;
+  top:2px;
+  left:2px;
+  transition:0.3s;
+  border:2px solid #000;
+}
+
+/* ON STATE */
+.toggle-ios input:checked + label{
+  background:#22d3ee;
+}
+
+.toggle-ios input:checked + label::after{
+  transform:translateX(22px);
+}
+
+
+/* 🌈 BEAUTIFUL LOGO */
+.logo{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 16px;
+  border-radius:999px;
+
+  background:
+    linear-gradient(135deg,#ffd83b,#efd13cd8);
+  
+  border:3px solid #000;
+  box-shadow:4px 4px 0 #000;
+
+  font-weight:700;
+  font-size:18px;
+  letter-spacing:0.3px;
+}
+
+/* icon bubble */
+.logo-icon{
+  width:30px;
+  height:30px;
+  background:#fff;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:2px solid #000;
+  font-size:16px;
+}
+
+/* text */
+.logo-text{
+  color:#020617;
+}
+
+/* 🌙 NIGHT MODE LOGO (still colorful, not dull) */
+body.dark .logo{
+  background:
+    linear-gradient(135deg,#e9e8e4,#e9e8e4);
+}
+
+body.dark .logo-text{
+  color:#020617;
+}
+
+.logo{
+  transition:transform 0.2s ease;
+}
+
+.logo:hover{
+  transform:translate(-2px,-2px);
+}
+
+/* 🔙 BACK BUTTON (FOOTER LEFT) */
+.back-btn{
+  position:fixed;
+  bottom:16px;
+  left:16px;
+  z-index:20;
+
+  display:flex;
+  align-items:center;
+  gap:6px;
+
+  padding:10px 14px;
+  border-radius:999px;
+
+  background:linear-gradient(135deg,#e9e8e4,#e9e8e4);
+  border:3px solid #000;
+
+  font-weight:600;
+  font-size:14px;
+  cursor:pointer;
+
+  box-shadow:4px 4px 0 #000;
+  transition:transform 0.2s ease;
+}
+
+/* arrow */
+.back-icon{
+  font-size:18px;
+  line-height:1;
+}
+
+/* hover / tap */
+.back-btn:hover{
+  transform:translate(-2px,-2px);
+}
+
+.back-btn:active{
+  transform:translate(2px,2px);
+  box-shadow:2px 2px 0 #000;
+}
+
+/* 🌙 NIGHT MODE (still colorful) */
+body.dark .back-btn{
+  background:linear-gradient(135deg,#22d3ee,#818cf8);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="logo">
+  
+  <span class="logo-text">RANJIT</span>
+</div>
+
+  <div class="toggle-ios">
+  <input type="checkbox" id="themeToggle" onclick="toggleMode()">
+  <label for="themeToggle"></label>
+</div>
+
+</div>
+
+<!-- CARDS -->
+<div class="cards">
+
+  <div class="card">
+    <img src="chat images/1.png">
+    <div class="prompt-box" id="p1">
+      Using the uploaded image as reference, create a fine-art fashion editorial scene of a figure seated low on a minimalist metal stool, legs extended forward in a relaxed, grounded posture, feet planted evenly, one hand resting loosely between the knees holding thin leather reins, shoulders slightly slouched and head tilted downward in a calm, introspective pose; the subject wears dark oversized layered clothing, wide-leg trousers, leather boots, and dark sunglasses. A powerful black horse stands close behind the seated figure, aligned protectively and partially overlapping their silhouette. The setting is an open, natural landscape with sparse wild grasses and rounded forms beneath a bright, overexposed sky that creates strong negative space and high-contrast lighting. The overall look is cinematic and timeless, with soft highlights, matte texture, subtle film grain, and a monochrome fine-art aesthetic, evoking luxury fashion photography and editorial elegance.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p1', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/2.png">
+    <div class="prompt-box" id="p2">
+      A man(keep the facial features unchanged as uploaded image)with a bare torso and wrapped in a tattered grey hooded scarf, reaching his left hand forward towards the camera, fingers extended. He is in a studio setting with a neutral grey background, soft, dramatic lighting from the side casting shadows, creating a focused, intense mood. Do not change the face. Preserve it 100% exactly as in the original uploaded photo.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p2', this)">📋 Copy Prompt</button>
+  </div>
+
+  <div class="card">
+    <img src="chat images/3.png">
+    <div class="prompt-box" id="p3">
+   Transform the image (uploaded image). Into 64k DSLR shot resolution of a surreal urban fashion photograph set inside a gritty public restroom with white tilled walls , gray tilled floor , and bright flourescent celling lights . The scene features a young man (same face a uploaded image) standing casually between blue bathroom stall dividers, leaning slightly with a confident, relaxed posture. He wears an all-black streetwear outfit:a loose black utility jacket, baggy black cargo pants, chunky black sneakers, and a black beanie. His expression is calm and self-assured, with direct eye contact to the camera. The overall mood is edgy yet approachable, with high contrast lighting emphasizing the textures of the tiled walls and his clothing.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p3', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/4.png">
+    <div class="prompt-box" id="p4">
+This subject in a stoic with a neutral expression leans with effortless poise against a weathered urban facade, positioned meticulously in the bottom right of the frame to adhere to a strict rule-of-thirds composition. The subject wears a rich, rust-colored corduroy bomber jacket over a clean white base, paired with dark, relaxed trousers and crisp white footwear. Dramatic Rembrandt lighting sculpts the facial features, casting a signature triangular highlight on the cheek while deep shadows envelop the opposite side, enhancing the three-dimensionality of the face. The background is a textured wall with peeling paint and graffiti, rendered in muted tones to ensure the subject remains the focal point. The overall color grading leans towards warm sepia tones, evoking a nostalgic yet timeless urban aesthetic.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p4', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/5.png">
+    <div class="prompt-box" id="p5">
+   Cinematic street photography, urban texture, black and yellow retro tone, high contrast.
+A handsome young man walking down an outdoor metal staircase of an apartment building.
+Brown brick wall background, gritty urban atmosphere.
+Low-angle perspective, cinematic depth.
+Calm gaze, flawless face,fair skin.
+The man holds the metal handrail with one hand, the other hand inside his pants pocket.
+Wearing an oversized camo windbreaker by Carhartt, black wide oversized long pants
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p5', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/6.png">
+    <div class="prompt-box" id="p6">
+   Ultra-realistic cinematic portrait of a male subject suspended mid-air beneath a single overhead beam of light, body slightly arched backward in a moment of transcendence, face turned upward with closed eyes and a calm, introspective expression. Natural skin tone with visible pores and fine skin texture, subtle highlights on cheekbones and forehead. Soft yet dramatic cinematic lighting with deep, realistic shadows, high contrast chiaroscuro effect against a dark, minimal background. 
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p6', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/7.png">
+    <div class="prompt-box" id="p7">
+  Ultra-realistic 8K cinematic close-up portrait (1664×2080). Dark villain vibe. Man slim lean physique. Head slightly up, chin forward, eyebrow raised, cold dominant eyes looking down, subtle evil smirk. Cigar near lips, thick slow smoke around face. Hairstyle EXACTLY same as reference. Raw skin texture, pores, scars, sweat, natural stubble. Small dragon tattoo near eyebrow. Finger tattoos “Z E N I N”; chain-style “zeet” tattoo. Metal ear piercings, luxury watch barely visible.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p7', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/8.png">
+    <div class="prompt-box" id="p8">
+   (preserve 100% facial details of this man), vintage classroom. The camera is shot from a distance, with a small section of the chair's back visible in front, as if the photographer was taking the portrait discreetly or in a quiet moment. Soft, gol-den-yellow lighting reflects from a small window or gap in the right wall, forming diagonal lines of light that fall directly on the man's face, creating a dramatic and emotional contrast.The man sits alone in a chair, his feet resting on the desk in front of him, wearing a loose white shirt with rolled-up sleeves, dark pants, and black shoes. His expression is calm yet contemplative, with a slight furrow in his brow as he gazes off into the distance, lost in thought.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p8', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/9.png">
+    <div class="prompt-box" id="p9">
+    A photorealistic shot of a person sitting on a wooden chair, overgrown garden. The person is dressed in streetwear style, wearing a burgundy oversized hoodie , baggy baige pant, and white sneakers . He has voluminous messy hairstyle and a( matching reference)He are sitting casually with one leg pulled up onto the chair. The background is filled with dense green tropical foliage, large banana leaves, and a bush full of bright pink roses.Dramatic, moody lighting with strong contrasts, as if shot during golden hour with warm sunlight filtering through the leaves, casting dappled shadows on the person and surrounding plants. The overall atmosphere is a blend of urban fashion and wild nature, creating a striking visual juxtaposition.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p9', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/10.png">
+    <div class="prompt-box" id="p10">
+    Edit image : this subject in a stoic with a neutral expression leans with effortless poise against a weathered urban facade, positioned meticulously in the bottom right of the frame to adhere to a strict rule-of-thirds composition. The subject wears a rich, rust-colored corduroy bomber jacket over a clean white base, paired with dark, relaxed trousers and crisp white footwear. Dramatic Rembrandt lighting sculpts the facial features, casting a signature triangular highlight on the cheek while a deep shadows envelop the opposite side, enhancing the three-dimensionality of the face. The background is a textured wall with peeling paint and graffiti, rendered in muted tones to ensure the subject remains the focal point. The overall color grading leans towards warm sepia tones, evoking a nostalgic yet timeless urban aesthetic.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p10', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/11.png">
+    <div class="prompt-box" id="p11">
+   A striking mid-shot of a man standing beside a textured wall where narrow beams of light stream through vertical slits, illuminating floating dust particles in the air. His face is partially lit, with the rest fading into deep shadow, creating a dramatic chiaroscuro effect. The camera is slightly tilted for added tension. He wears a dark olive jacket and round glasses, embodying a mysterious.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p11', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/12.png">
+    <div class="prompt-box" id="p12">
+   Hyper-realistic black and white portrait of a handsome man with a beard looking upwards into a light source. He is completely soaked in rain, with water droplets running down his face, beard, and neck. Wet messy curly hair, unbuttoned shirt clinging to wet skin. Dramatic cinematic lighting (chiaroscuro), high contrast, deep shadows, emotional and intense expression, sharp focus on water texture and eyes, 8k resolution, monochrome photography masterpiece." Size 4:5 ratio 100% use my face uploaded.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p12', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/13.png">
+    <div class="prompt-box" id="p13">
+   The generated image uses the uploaded image as a reference for the character, wearing a baige turtleneck, with brown pant and brown blazer. A cluster of withered wood and orange-pink flowers lies beside an old newsstand, the grainy texture of vintage film interwoven, the blurred background with noticeable trailing shadows, and the double-image effect creating a fantastical atmosphere.A handsome young man, carrying flowers, is shown in Profile,his fair skin delicate and translucent. H 
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p13', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/14.png">
+    <div class="prompt-box" id="p14">
+    Ultra-realistic cinematic luxury portrait with dark royalty vibes. A confident man sits on a blue velvet sofa beside a snarling white wolf in a dim, opulent room. Wearing a of white pinstripe suit,black shirt, gold chains, and sunglasses, he exudes power and control. Moody lighting, cinematic depth, ultra-sharp, high-end editorial realism.
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p14', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/15.png">
+    <div class="prompt-box" id="p15">
+  Transform the image (uploaded image). Into 64k DSLR shot resolution of a surreal urban fashion photograph set inside a gritty public restroom with white tilled walls , gray tilled floor , and bright flourescent celling lights . The scene features a young man (same face a uploaded image) standing casually between blue bathroom stall dividers, leaning slightly with a confident, relaxed posture. He wears an all-black streetwear outfit:a loose black utility jacket, baggy black cargo pants, chunky black sneakers, and a black beanie. His expression is calm and self-assured, with direct eye contact to the camera. The overall mood is edgy yet approachable, with high contrast lighting emphasizing the textures of the tiled walls and his clothing.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p15', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/16.png">
+    <div class="prompt-box" id="p16">
+  Photograph me sitting low on a minimalist metal stool, legs spread forward in a relaxed, grounded pose, feet planted on uneven outdoor terrain. One hand loosely resting between the knees holding thin leather reins, shoulders slightly slouched, head tilted downward in a calm, introspective expression. The subject wears dark oversized layered clothing, wide-leg trousers, leather boots, and dark sunglasses. A strong aggressive dragon stands closely behind the seated figure,
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p16', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/17.png">
+    <div class="prompt-box" id="p17">
+  “Ultra-realistic cinematic night street portrait of a young male standing in a crowded city street during rain. He is wearing a yellow raincoat with the hood down, wet hair clinging softly to his face. The camera captures her from behind and slightly to the side as she turns her head back over her shoulder, looking directly at the camera with an intense, thoughtful expression. Raindrops visible in the air, moisture on his skin and jacket. Foreground silhouettes of people on both sides,creating a natural frame. Background filled with colorful blurred city lights, neon signs, and warm bokeh. Shallow depth of field, strong subject focus, cinematic low-light photography, soft glow on face, realistic skin texture, professional DSLR look, 8K ultra-detail, vertical 4:5 composition. Image generate
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p17', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/18.png">
+    <div class="prompt-box" id="p18">
+   Full-body studio portrait of my photo uploaded (keep original face) wears a steel-gray denim jacket, white ribbed shirt, charcoal joggers, and black sneakers-reflecting the urban grit. His realistic muscles and textures shine under harsh-edged cinematic lighting. Beside him stands the anime graffiti boy, leaning against the imaginary illustrated wall. Studio remains warm sunrise gray with sketch-like projections lightly behind him
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p18', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/19.png">
+    <div class="prompt-box" id="p19">
+  Ultra-cinematic dramatic portrait of a muscular bearded man in side profile, intense and focused expression, short faded haircut with textured top, sharp jawline, thick beard, detailed skin pores and sweat.Fiery orange light glowing across the forehead and temple, contrasted with cool teal/blue rim lighting on the face and shoulder.
+Bare upper body with realistic tattoos on shoulder and chest, wet skin effect, sparks, embers, floating particles and dust in the air.
+Dark moody background, shallow depth of field, volumetric lighting, cinematic atmosphere, high contrast, HDR look.
+Hyper-realistic, ultra-detailed, 8K quality, dramatic shadows, studio lighting, professional color grading, epic movie poster style, sharp focus, realistic textures, photorealism. 
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p19', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/20.png">
+    <div class="prompt-box" id="p20">
+  Ultra realistic portrait of a young Indian man(use refrence image)messy valume hair, wearing a imp brown-pattern shirt with open collar. He wears black rectangular sunglasses and a small earring. The lighting is dramatic golden hour with warm rim light coming from the top left, creating cinematic flare and beautiful soft bokeh in the background. The skin tone is warm and natural.The background is blurred, dark, and moody, with soft sunlight leaks. Shot in vintage cinematic photography,
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p20', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/21.png">
+    <div class="prompt-box" id="p21">
+  A high-contrast cinematic black-and-white portrait of the same man from the reference image, 
+short styled hair, groomed beard, masculine facial structure, realistic skin texture.
+He is sitting on a simple chair in an open field, wearing a dark utility jacket and sunglasses.
+Directly behind him stands a massive, powerful dark horse, perfectly centered, towering over the man.
+The horse’s mane is blowing intensely in the wind, adding motion and drama.Moody atmosphere, dramatic lighting, strong shadows, grainy 35mm film texture,
+sharp focus on the man’s face, shallow depth of field,
+editorial fashion photography, ultra-realistic, cinematic composition. Wearing glasses 
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p21', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/22.png">
+    <div class="prompt-box" id="p22">
+  Render an 8K ultrarealistic close shot of a man with fair skin (face characteristics 100% same as uploaded image) with windswept black hair partially covering one eye. A sharp diagonal natural light beam illuminates his elevated gaze, showcasing his light irises, high cheekbones, and natural color lips. Deep shadows envelop the rest of his face and the environment, creating a dark, cinematic,
+editorial mood
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p22', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/23.png">
+    <div class="prompt-box" id="p23">
+   Dark noir portrait of a handsome young man sitting alone in a shadowy café, wearing a dark blazer and wristwatch. Sunlight barely enters the room. Use uploaded image as facial reference, exact match required. Overhead angle, detective-film vibe.",
+ "size": "1024x1024",
+ "n": 1
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p23', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/24.png">
+    <div class="prompt-box" id="p24">
+  Convert this image into a Fine black and white photography of a handsome young man (take reference face as uploaded image face)with dark, he is sitting on the chair tilted back in a moment of intense creative thought or ecstasy. He is wearing open, loose white collared shirt, standing in a dimly lit study filled with stacks of books and papers. The image is captured with a slow shutter speed, creating dramatic horizontal motion blur that streaks the background and the edges of his form.
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p24', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/25.png">
+    <div class="prompt-box" id="p25">
+  This is an ultra-realistic, high-quality portrait of a man, preserving his unique physiognomy, age, gender, skin tone, hair, glasses, and expression.
+Detail:
+The main subject is a man with dark brown hair that is loose and slightly disheveled. His hair is intensely backlit, creating a golden halo that contrasts sharply with the dark background.
+Expression and Pose: He turns his face toward the camera, keeping it straight but partially in shadow. His mouth is slightly open.
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p25', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/26.png">
+    <div class="prompt-box" id="p26">
+  A cinematic ultra-realistic prison cafeteria scene during mealtime, featuring a man (attached photo — face locked 100% identical, no reinterpretation, same facial structure, skin texture, pores, expression fidelity). He sits at a long metal dining table inside a crowded penitentiary hall, surrounded by other inmates, but the focus remains naturally on him without posing.Appearance: short uneven buzz-cut hair grown out irregularly, slightly longer on top, sides thinner, with a small scar visible on the scalp. Face shows controlled, cold confidence — calm, dominant, bored. Facial tattoos are realistic and restrained: small script on the temple, a subtle symbol near the eye, thin linework along the jaw, and a neck tattoo rising slightly toward the jawline, authentic Mexican-mafia inspired style, not exaggerated, not caricature.Wardrobe: standard prison-issued ORANGE inmate uniform, slightly faded and worn from daily use. Short-sleeve orange prison shirt slightly unbuttoned at the collar, sleeves loosely rolled, visible fabric creases, stains, and discoloration consistent with long-term incarceration. Matching orange prison pants partially visible. No accessories beyond what is realistic inside prison. Action & body language: candid, unstaged moment — one hand holding a metal spoon over a tray of simple prison food (rice, vegetables, protein), the other resting casually on the table. Shoulders relaxed, posture confident. He is not looking at the camera — his gaze is angled sideways toward another inmate or a guard, implying silent authority.Environment: large prison dining hall with long steel tables, other inmates in matching orange uniforms eating, some glancing subtly toward him, others focused on their meals. Guards visible in the background but out of focus. Concrete walls with peeling paint, water stains, industrial ceiling fans, flickering fluorescent lights, a large wall clock indicating meal time. No documentary feel — this is a narrative film scene. light creating strong contrast on face and tattoos, emphasizing realism. No fog, no haze. Natural gritty shadows, realistic skin tones.Camera: slightly low angle as if observed from another table, medium-full body framing, shallow depth of field isolating the subject naturally. Motion frozen mid-action, not posed.
+Mood: tense, controlled, cinematic crime-drama atmosphere — the presence of a quiet leader inside confinement, powerful without exaggeration. Style: ultra-photorealistic, cinematic realism, film still quality, candid moment, sharp skin texture, fabric fibers, metal reflections, 8K ultra detail.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p26', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/27.png">
+    <div class="prompt-box" id="p27">
+  Ultra-realistic cinematic fitness portrait of a young South Asian man (early 20s) standing shirtless in a locker room/bathroom. Side-angle mid-thigh to head shot, muscular physique with defined abs and arms. Calm confident expression, messy black hair, light beard. Black joggers and white earbuds. Warm indoor lighting, shallow depth of field, blurred faucet foreground, DSLR 50mm, f/1.8, 4K.
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p27', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/28.png">
+    <div class="prompt-box" id="p28">
+  A Uploaded image cinematic portrait of a rugged man standing on a balcony, viewed from a low angle. He wears a dark denim shirt with rolled sleeves, a belt, and aviator sunglasses. His hair is thick and voluminous with a retro 1980s style, and he has a full beard and mustache. One arm rests confidently on the balcony railing while the other touches a white pillar. The scene uses dramatic lighting with a bold, textured deep-red background replacing the sky.
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p28', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/29.png">
+    <div class="prompt-box" id="p29">
+  High-contrast black and white photo taken with a 1990s disposable camera at a dark house party. rty. A handso young man with dark, curly hair and a sharp jawline is staring directly into the lens. Focus on the eyes: intense, light-colored irises with a piercing, predatory gaze, slightly heavy-lidded (siren eyes), reflecting the harsh camera flash. He is wearing a black button-down shirt. The image is grainy, lo-fi, with a "dark academia" bad boy aesthetic.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p29', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/30.png">
+    <div class="prompt-box" id="p30">
+    A black and white studio portrait using dramatic side lighting to create deep shadows, capturing a man in a dark, textured coat in a three-quarter profile pose with a large crow perched on his left shoulder against a seamless grey backdrop. The camera is eye-level, focusing on the figure with a somber, intense mood. Do not change the face. Preserve it 100% exactly as in the original uploaded photo.
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p30', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/31.png">
+    <div class="prompt-box" id="p31">
+  High-contrast black and white photo taken with a 1990s disposable camera at a dark house party. rty. A handso young man with dark, curly hair and a sharp jawline is staring directly into the lens. Focus on the eyes: intense, light-colored irises with a piercing, predatory gaze, slightly heavy-lidded (siren eyes), reflecting the harsh camera flash. He is wearing a black button-down shirt. The image is grainy, lo-fi, with a "dark academia" bad boy aesthetic.
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p31', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/32.webp">
+    <div class="prompt-box" id="p32">
+  A powerful Afro-futuristic warrior man(keep the facial features unchanged as uploaded image)in a dynamic dance pose, barefoot and stepping into glowing embers, sparks and fire swirling around his feet. he wears layered, tattered nomadic clothing in earthy browns and deep reds, adorned with metallic man jewelry, chains, arm cuffs, and talismans. His athletic body is decorated with intricate tribal tattoos across her torso and arms. he has braided dreadlocks pulled back, head bowed in focused 
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p32', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/33.webp">
+    <div class="prompt-box" id="p33">
+   A high-detail cinematic live-action shot of a young Indian man with dark messy voluminous spiked black hair, wearing a dark navy tactical high-collar uniform. He is crouching in a powerful stance in the courtyard of an ancient, weathered Shinto shrine at dusk. To his left stands a large, prowling black wolf with glowing eyes; to his right, a large, fierce white wolf. Moody, atmospheric lighting with soft orange sunset hues hitting the wood of the temple.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p33', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/34.webp">
+    <div class="prompt-box" id="p34">
+   Ultra-realistic cinematic portrait of a male subject suspended mid-air beneath a single overhead beam of light, body slightly arched backward in a moment of transcendence, face turned upward with closed eyes and a calm, introspective expression. Natural skin tone with visible pores and fine skin texture, subtle highlights on cheekbones and forehead. Soft yet dramatic cinematic lighting with deep, realistic shadows, high contrast chiaroscuro effect against a dark, minimal background.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p34', this)">📋 Copy Prompt</button>
+  </div>
+
+
+
+<div class="card">
+    <img src="chat images/35.webp">
+    <div class="prompt-box" id="p35">
+   Use 100% face above uploaded photo Creat a realistic dark green portrait cinematic image with dramatic bold attitude and confidence actions. of a 15 year young styleish boy with black hair and black beard (refrence image given) with wearing an oversizedlight darkgray shirt with the top buttons undone stylish, front tuck in the pants: white baggypants, watch is left hand, dark messyhair, sharp jawline, bright light source comming from top and back of his head baground is artificial studio garden.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p35', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/36.webp">
+    <div class="prompt-box" id="p36">
+   Ultra-realistic cinematic portrait of a male subject suspended mid-air beneath a single overhead beam of light, body slightly arched backward in a moment of transcendence, face turned upward with closed eyes and a calm, introspective expression. Natural skin tone with visible pores and fine skin texture, subtle highlights on cheekbones and forehead. Soft yet dramatic cinematic lighting with deep, realistic shadows, high contrast chiaroscuro effect against a dark, minimal background.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p36', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/37.jpg">
+    <div class="prompt-box" id="p37">
+    Create a realistic dark green portrait cinematic image with dramatic bold attitude and confidence actions of a young man (refrence image given) with wearing an oversized dark red shirt with the top buttons and white baggy pants, watch is left hand, curly hair, sharp jawline, bright light. Standing confidently with cool pose, side angle photo against a grey wall with green foliage and Red&rose flowers overhead. Face match
+100%
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p37', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/38.webp">
+    <div class="prompt-box" id="p38">
+    Ultra-realistic cinematic full-body portrait of a young man standing casually against an urban metal gate at night, wearing a black leather jacket over a dark shirt, wide-leg black trousers, and polished black shoes, styled with a modern minimalist aesthetic. Natural medium skin tone with visible pores, fine skin texture, and subtle imperfections, highly photorealistic facial detailing. Soft yet dramatic cinematic lighting with realistic shadows
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p38', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/39.jpg">
+    <div class="prompt-box" id="p39">
+   A high-fidelity digital art style, low-angle close-up of an individual with head tilted back in a serene pose. Dramatic dappled sunlight filters through an unseen lattice, casting intricate, warm light patterns and deep shadows across the face and a textured button-down shirt worn over a tee. The background is a dark, moody room with blurred floral posters. Ethereal, glowing petals and soft light particles float in the air. Cinematic lighting,
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p39', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/40.webp">
+    <div class="prompt-box" id="p40">
+    The character has left side medium-length wavy hair slightly messy, conveying a raw and fearless attitude. He wears a fitted black button-down shirt with sleeves rolled slightly, paired with dark trousers, giving a tough yet stylish look.Hands relaxed near the sides, postureconfident and dominant.Background features a very  large LED screen or digital dot-matrix pattern with high contrast lighting, creating a dramatic stage-like atmosphere. Behind the character, bold red abstract shapes or patterns glow intensely, adding to the edgy vibe.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p40', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/41.webp">
+    <div class="prompt-box" id="p41">
+  A dynamic, low-angle cinematic masterpiece capturing an assassin in mid-air, executing a high-velocity combat leap, featuring the uploaded face as reference fully visible and clearly defined with natural eyes and unobstructed facial features. The figure is clad in intricate, blackened tactical stealth armor mixed with tattered rogue fabrics, heavily detailed with glowing molten magma veins and fractured lava-like cracks running through the material 
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p41', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/42.webp">
+    <div class="prompt-box" id="p42">
+   A young man with the same unchanged face, pale soft complexion, caught in a classic 90s disposable-camera snapshot. His modern hairstyle. he gives a subtle smirk, relaxed and unbothered. he’s wearing a popcorn style gradient grey and black combined shirt with trouser paint. The background is a dim beige wall cluttered with polaroids, doodles, and taped-up concert tickets, barely visible. The harsh on-camera flash creates flat shadows and quiet, late-night realism.
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p42', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/43.jpg">
+    <div class="prompt-box" id="p43">
+   Use the uploaded photo as the primary reference to achieve a 100% exact match for the young man’s face and hair.
+A dramatic cinematic portrait of a young superhero standing in profile at sunset, golden-hour sky glowing behind him. His red-and-black armored suit is partially disintegrating into dust and glowing particles, drifting into the air as if caught in slow motion. 
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p43', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/44.jpg">
+    <div class="prompt-box" id="p44">
+  Hyper-realistic photorealistic image with absolute preservation of the original face having fair color skinned, no stylization or alteration. A confident man wearing matte black luxury sunglasses, an electric Orange knitted sweater with rich knit texture, black high-waisted jeans with clean structure, and white and black high-top sneakers. He stands casually with one arm resting on a giant 3D photorealistic Charmander, rendered with realistic fur texture and soft lighting, 
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p44', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/45.webp">
+    <div class="prompt-box" id="p45">
+   "Ultra-realistic cinematic portrait of a young man(keep the facial features unchanged as uploaded image)in a deep red hooded cloak, three-quarter side profile, looking slightly upward with a tense, hopeful expression
+Freckled pale skin, light facial scars, wet black hair falling over his shoulders. Heavy rain, cold misty medieval background, blurred armored figures behind her. Moody teal-grey color grading, soft diffused light on face, shallow depth of field, dramatic atmosphere, 8K,
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p45', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/46.webp">
+    <div class="prompt-box" id="p46">
+  A hyper-realistic, cinematic portrait of a dark elven warlock king with a sharp, brooding masculine face. He has piercing glowing amber eyes, high cheekbones, and a faint, intricate black vertical scar/tattoo running through one eye.
+Attire & Details:
+He wears an ornate, jagged crown of black obsidian and twisted iron that seems to grow from his long, flowing raven-black hair. His chest and neck are covered in intricate black ink tattoos that mimic gothic lace and arcane sigils
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p46', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/47.webp">
+    <div class="prompt-box" id="p47">
+  A ultra-realistic dark cinematic portrait of a tough
+post-apocalyptic male(keep the facial features unchanged as uploaded image)warrior sitting on a wooden crate, wearing a worn black leather jacket with fur collar, cropped black top, rugged cargo pants and heavy combat boots. His hair is tied in a messy manbun, face slightly tilted down with a calm yet dangerous expression. A spiked metal baseball bat rests on her shoulder, symbol of survival and strength. Dramatic low-key lighting, soft rim 
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p47', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/48.webp">
+    <div class="prompt-box" id="p48">
+   A cinematic cyberpunk samurai man(keep the facial features unchanged as uploaded image)standing on the edge of a skyscraper rooftop, overlooking a futuristic city skyline far below. She has long braided dreadlocks with orange accents, intricate facial markings and tattoos, and a calm, focused expression while looking downward. She wears rugged, post-apocalyptic tactical clothing with layered fabric, armor plates, and straps, exposing a toned midriff. Two katanas are visible-one sheathed on his 
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p48', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/49.webp">
+    <div class="prompt-box" id="p49">
+   Full-body studio portrait of my photo uploaded (keep original face) wears a steel-gray denim jacket, white ribbed shirt, charcoal joggers, and black sneakers-reflecting the urban grit. His realistic muscles and textures shine under harsh-edged cinematic lighting. Beside him stands the anime live(real) graffiti boy, leaning against the imaginary illustrated wall.
+Studio remains warm sunrise gray with sketch-like projections lightly behind him Text & Branding:
+Bottom-right corner: 
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p49', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/50.webp">
+    <div class="prompt-box" id="p50">
+Ultra-realistic black & white cinematic portrait of a man(keep the facial features unchanged as uploaded image), showing only half of his face covered with a thick, textured woolen hood or cloak just like in the reference image.
+Expression is intense and mysterious, eyes slightly narrowed, with messy long hair strands falling near the face.
+The visible eye should be bright sky blue, glowing subtly even in monochrome tones. Lighting is moody and dramatic, with deep shadows and high contrast
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p50', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/51.webp">
+    <div class="prompt-box" id="p51">
+   A man(keep the facial features unchanged as uploaded image)with a bare torso and wrapped in a tattered grey hooded scarf, reaching his left hand forward towards the camera, fingers extended. He is in a studio setting with a neutral grey background, soft, dramatic lighting from the side casting shadows, creating a focused, intense mood. Do not change the face. Preserve it 100% exactly as in the original uploaded photo.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p51', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/52.webp">
+    <div class="prompt-box" id="p52">
+  A full-body studio potrait of friendly, smiling young man(keep the facial features unchanged as uploaded image) he is wearing a yellow ribbed knit sweater, ripped blue jeans and converse high top sneakers , standing next to the character puss in boots. The man is leaning his arm on the cat's hat , puss in boots is rendered in high details 3D animation with realistic orange fur, wearing his signature black hat and leather boots . Posing with one hand on his hip, soft, professional studio lighting against a neutral grey background.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p52', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/53.webp">
+    <div class="prompt-box" id="p53">
+  Transform the image (uploaded image). Into 64k DSLR shot resolution of a surreal urban fashion photograph set inside a gritty public restroom with white tilled walls , gray tilled floor , and bright flourescent celling lights . The scene features a young man (same face a uploaded image) standing casually between blue bathroom stall dividers, leaning slightly with a confident, relaxed posture. He wears an all-black streetwear outfit:a loose black utility jacket, baggy black cargo pants, chunky black sneakers, and a black beanie. His expression is calm and self-assured, with direct eye contact to the camera. The overall mood is edgy yet approachable, with high contrast lighting emphasizing the textures of the tiled walls and his clothing.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p53', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/54.webp">
+    <div class="prompt-box" id="p54">
+   A full body ultra-realistic potrait on a modern rooftop under a dramatic, stormy sky with heavy dark clouds and thunder lighting. A young stylish man stands on the left, leaning casually against a white concrete rooftop wall, extending his first forward for a fist-bump. On the right stands Goku, seamlessly integrated into the real-world environment, returning the fist-bump in perfect alignment and scale.Both characters are wearing exact same outfit.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p54', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/55.webp">
+    <div class="prompt-box" id="p55">
+   This subject in a stoic with a neutral expression leans with effortless poise against a weathered urban facade, positioned meticulously in the bottom right of the frame to adhere to a strict rule-of-thirds composition. The subject wears a rich, rust-colored corduroy bomber jacket over a clean white base, paired with dark, relaxed trousers and crisp white footwear. Dramatic Rembrandt lighting sculpts the facial features, casting a signature triangular highlight on the cheek while deep shadows envelop the opposite side, enhancing the three-dimensionality of the face. The background is a textured wall with peeling paint and graffiti, rendered in muted tones to ensure the subject remains the focal point. The overall color grading leans towards warm sepia tones, evoking a nostalgic yet timeless urban aesthetic.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p55', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/56.webp">
+    <div class="prompt-box" id="p56">
+  A stylish man (use upload image face)sitting on an empty city street at night under a highway overpass, leaning against a large concrete pillar covered in colorful graffiti art. The perspective is low-angle, making the red and white sneakers in the foreground appear large and striking. The man wears a white T-shirt with a bold red Letter "Z E N I N," dark green jogger pants, and a red flannel shirt tied around his waist. Light trails from passing cars streak across both sides of the road, creating dynamic motion in the otherwise still scene. The background features urban elements like streetlights, road signs, and distant buildings, all softly illuminated by the ambient city glow. The overall mood is edgy and modern, with a cinematic quality enhanced by the contrast between the vibrant graffiti and the dark night setting.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p56', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/57.webp">
+    <div class="prompt-box" id="p57">
+  Ultra-realistic cinematic portrait of a young Indian man, three-quarter profile, head tilted slightly back and to camera left, gaze directed downward and off-frame with a contemplative, introspective expression; relaxed eyelids, subtle brow tension, neutral lips. Medium-close framing from upper chest to head, slight low-angle perspective, subject leaning back against a surface; shoulders relaxed, torso angled left Wearing a crisp white button-down shirt with visible fabric texture and seams, open collar. Natural medium skin tone with visible pores, fine skin texture, and subtle imperfections, highly photorealistic facial detailing. Soft yet dramatic cinematic lighting with realistic shadows, high contrast chiaroscuro effect against a dark, minimal background.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p57', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/58.webp">
+    <div class="prompt-box" id="p58">
+  Create an High-contrast nighttime stree
+Subject stands casually leaning against a white Japanese sports car (Bmw M4 Competition Modified MK4 style), shot with loose black jeans, textured dark sweater, casual stance with hands relaxed.
+Strong flash lighting creates hard shadows, deep blacks, and slightly blown highlights.
+Film-like grain, disposable camera look, early-2000s Tokyo street racing vibe.
+Moody, cinematic, raw realism. Shot at night, shallow depth of field, candid fashion photography.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p58', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/59.webp">
+    <div class="prompt-box" id="p59">
+  Cinematic street photography, urban texture, black and yellow retro tone, high contrast.
+A handsome young man walking down an outdoor metal staircase of an apartment building.
+Brown brick wall background, gritty urban atmosphere.
+Low-angle perspective, cinematic depth.
+Calm gaze, flawless face,fair skin.
+The man holds the metal handrail with one hand, the other hand inside his pants pocket.
+Wearing an oversized camo windbreaker by Carhartt, black wide oversized long pants.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p59', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/60.webp">
+    <div class="prompt-box" id="p60">
+  Ultra-realistic 8K cinematic close-up portrait (1664×2080). Dark villain vibe. Man slim lean physique. Head slightly up, chin forward, eyebrow raised, cold dominant eyes looking down, subtle evil smirk. Cigar near lips, thick slow smoke around face. Hairstyle EXACTLY same as reference. Raw skin texture, pores, scars, sweat, natural stubble. Small dragon tattoo near eyebrow. Finger tattoos “Z E N I N”; chain-style “zeet” tattoo. Metal ear piercings, luxury watch barely visible.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p60', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/61.webp">
+    <div class="prompt-box" id="p61">
+  (preserve 100% facial details of this man), vintage classroom. The camera is shot from a distance, with a small section of the chair's back visible in front, as if the photographer was taking the portrait discreetly or in a quiet moment. Soft, gol-den-yellow lighting reflects from a small window or gap in the right wall, forming diagonal lines of light that fall directly on the man's face, creating a dramatic and emotional contrast.
+The man sits alone in a chair, his feet resting on the desk in front of him, wearing a loose white shirt with rolled-up sleeves, dark pants, and black shoes. His expression is calm yet contemplative, with a slight furrow in his brow as he gazes off into the distance, lost in thought.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p61', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/62.webp">
+    <div class="prompt-box" id="p62">
+  A photorealistic shot of a person sitting on a wooden chair, overgrown garden. The person is dressed in streetwear style, wearing a burgundy oversized hoodie , baggy baige pant, and white sneakers . He has voluminous messy hairstyle and a( matching reference)He are sitting casually with one leg pulled up onto the chair. The background is filled with dense green tropical foliage, large banana leaves, and a bush full of bright pink roses.Dramatic, moody lighting with strong contrasts, as if shot during golden hour with warm sunlight filtering through the leaves, casting dappled shadows on the person and surrounding plants. The overall atmosphere is a blend of urban fashion and wild nature, creating a striking visual juxtaposition.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p62', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/63.webp">
+    <div class="prompt-box" id="p63">
+  A man (attached photo) wearing a dark hoodie, low-angle pose, open sky background, cinematic realism, 8K ultra detail.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p63', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/64.webp">
+    <div class="prompt-box" id="p64">
+  Edit image : this subject in a stoic with a neutral expression leans with effortless poise against a weathered urban facade, positioned meticulously in the bottom right of the frame to adhere to a strict rule-of-thirds composition. The subject wears a rich, rust-colored corduroy bomber jacket over a clean white base, paired with dark, relaxed trousers and crisp white footwear. Dramatic Rembrandt lighting sculpts the facial features, casting a signature triangular highlight on the cheek while a deep shadows envelop the opposite side, enhancing the three-dimensionality of the face. The background is a textured wall with peeling paint and graffiti, rendered in muted tones to ensure the subject remains the focal point. The overall color grading leans towards warm sepia tones, evoking a nostalgic yet timeless urban aesthetic.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p64', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/65.webp">
+    <div class="prompt-box" id="p65">
+  A high-fashion editorial shot of a young man posing confidently in a stylish white boho outfit paired with clean white sneakers. Slightly tousled chic hair, full body pose captured in a garden with artistic framing. High resolution beauty, refined lighting, soft muted palette, glossy magazine aesthetic, elegant posture, and detailed textures. Vogue inspired outdoor editorial.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p65', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/66.webp">
+    <div class="prompt-box" id="p66">
+  A striking mid-shot of a man standing beside a textured wall where narrow beams of light stream through vertical slits, illuminating floating dust particles in the air. His face is partially lit, with the rest fading into deep shadow, creating a dramatic chiaroscuro effect. The camera is slightly tilted for added tension. He wears a dark olive jacket and round glasses, embodying a mysterious.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p66', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/67.webp">
+    <div class="prompt-box" id="p67">
+  Hyper-realistic black and white portrait of a handsome man with a beard looking upwards into a light source. He is completely soaked in rain, with water droplets running down his face, beard, and neck. Wet messy curly hair, unbuttoned shirt clinging to wet skin. Dramatic cinematic lighting (chiaroscuro), high contrast, deep shadows, emotional and intense expression, sharp focus on water texture and eyes, 8k resolution, monochrome photography masterpiece." Size 4:5 ratio 100% use my face uploaded
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p67', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/68.webp">
+    <div class="prompt-box" id="p68">
+  The generated image uses the uploaded image as a reference for the character, wearing a baige turtleneck, with brown pant and brown blazer. A cluster of withered wood and orange-pink flowers lies beside an old newsstand, the grainy texture of vintage film interwoven, the blurred background with noticeable trailing shadows, and the double-image effect creating a fantastical atmosphere.A handsome young man, carrying flowers, is shown in Profile,his fair skin delicate and translucent.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p68', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/69.webp">
+    <div class="prompt-box" id="p69">
+  Ultra-realistic cinematic luxury portrait with dark royalty vibes. A confident man sits on a blue velvet sofa beside a snarling white wolf in a dim, opulent room. Wearing a of white pinstripe suit,black shirt, gold chains, and sunglasses, he exudes power and control. Moody lighting, cinematic depth, ultra-sharp, high-end editorial realism.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p69', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/70.webp">
+    <div class="prompt-box" id="p70">
+  Photograph me sitting low on a minimalist metal stool, legs spread forward in a relaxed, grounded pose, feet planted on uneven outdoor terrain. One hand loosely resting between the knees holding thin leather reins, shoulders slightly slouched, head tilted downward in a calm, introspective expression. The subject wears dark oversized layered clothing, wide-leg trousers, leather boots, and dark sunglasses. A strong aggressive dragon stands closely behind the seated figure,
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p70', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/71.webp">
+    <div class="prompt-box" id="p71">
+  An ultra-realistic cinematic 8K portrait of a stylish young man captured in a sharp side-profile close-up.
+He has a clean, symmetrical face with a sharp jawline, well-defined cheekbones, and a neatly trimmed full beard with precise edges blending smoothly into his sideburns. His skin tone is warm medium-brown, smooth and natural with realistic pores and subtle texture.He wears futuristic rectangular sunglasses with dark reflective lenses, thick glossyframes in a deep brown tone, catching
+ </div>
+  <button class="copy-btn" onclick="copyPrompt('p71', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/72.webp">
+    <div class="prompt-box" id="p72">
+  A man sitting on stone steps in a park during night moonlight. he has styled hair, wearing a blue silk shirts over a white t-shirt, ripped black jeans, and white sneakers, looking thoughtfully at a glowing female figure. The. figure, made of golden light, with wavy hair, is holding a red fire rose and offering it to him. Soft sunlight, dreamy atmosphere, cinematic, magical realism, high quality photo. Use 100% same face.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p72', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/73.webp">
+    <div class="prompt-box" id="p73">
+  Ultra-realistic, cinematic portrait of a handsome young man standing intimately beside a dark brown horse inside a stable.
+The man is in his early 20s, with soft masculine features, lightly tanned skin, and subtle stubble along the jawline. He has thick, slightly messy dark brown hair with natural volume, gently falling over his forehead. His expression is calm, introspective, and tender, eyes cast downward toward the horse, creating an emotional, quiet moment.He wears a relaxed white button
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p73', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/74.webp">
+    <div class="prompt-box" id="p74">
+    “Ultra-realistic cinematic night street portrait of a young male standing in a crowded city street during rain. He is wearing a yellow raincoat with the hood down, wet hair clinging softly to his face. The camera captures her from behind and slightly to the side as she turns her head back over her shoulder, looking directly at the camera with an intense, thoughtful expression. Raindrops visible in the air, moisture on his skin and jacket. Foreground silhouettes of people on both sides,creating a natural frame. Background filled with colorful blurred city lights, neon signs, and warm bokeh. Shallow depth of field, strong subject focus, cinematic low-light photography, soft glow on face, realistic skin texture, professional DSLR look, 8K ultra-detail, vertical 4:5 composition. Image generate
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p74', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/75.webp">
+    <div class="prompt-box" id="p75">
+  Full-body studio portrait of my photo uploaded (keep original face) wears a steel-gray denim jacket, white ribbed shirt, charcoal joggers, and black sneakers-reflecting the urban grit. His realistic muscles and textures shine under harsh-edged cinematic lighting. Beside him stands the anime graffiti boy, leaning against the imaginary illustrated wall. Studio remains warm sunrise gray with sketch-like projections lightly behind him
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p75', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/76.webp">
+    <div class="prompt-box" id="p76">
+  Ultra-cinematic dramatic portrait of a muscular bearded man in side profile, intense and focused expression, short faded haircut with textured top, sharp jawline, thick beard, detailed skin pores and sweat.Fiery orange light glowing across the forehead and temple, contrasted with cool teal/blue rim lighting on the face and shoulder.
+Bare upper body with realistic tattoos on shoulder and chest, wet skin effect, sparks, embers, floating particles and dust in the air.
+Dark moody background, shallow depth of field, volumetric lighting, cinematic atmosphere, high contrast, HDR look.
+Hyper-realistic, ultra-detailed, 8K quality, dramatic shadows, studio lighting, professional color grading, epic movie poster style, sharp focus, realistic textures, photorealism. 
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p76', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/77.webp">
+    <div class="prompt-box" id="p77">
+  ransform this image [UPLOAD YOUR IMAGE] into a 64K DSLR shot resolution of A moody, cinematic portrait of a young man (same face as the uploaded image) standing in profile at night, captured from the side with his head slightly bowed, conveying a quiet, introspective emotion. He wears a dark padded jacket layered over a hoodie, giving a winter or late-night streetwear feel. He has short, dark hair, a well-groomed beard,
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p77', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/78.webp">
+    <div class="prompt-box" id="p78">
+  Cinematic motion blur, editorial fashion photography, dynamic portrait, slow shutter effect, motion streaks, high contrast lighting, color grading aesthetic, abstract movement, modern visual storytelling, artistic photography style, creative direction, experimental visuals, viral image style, AI generated fashion, prompt engineering, visual impact, dramatic silhouette, modern aesthetics, trending photography
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p78', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/79.webp">
+    <div class="prompt-box" id="p79">
+  Moody black and white portrait photography, low-key lighting, cinematic shadows, a person reclining on a couch, wearing a loose white button-down shirt with sleeves slightly rolled, a black tie loosened and hanging casually, head tilted back, one arm resting over the forehead, soft facial features partially hidden in shadow, emotional and melancholic atmosphere, vintage film grain, high contrast, shallow depth of field, dramatic chiaroscuro lighting, fine art photography, editorial fashion.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p79', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/80.webp">
+    <div class="prompt-box" id="p80">
+  Ultra realistic portrait of a young Indian man(use refrence image)messy valume hair, wearing a imp brown-pattern shirt with open collar. He wears black rectangular sunglasses and a small earring. The lighting is dramatic golden hour with warm rim light coming from the top left, creating cinematic flare and beautiful soft bokeh in the background. The skin tone is warm and natural.The background is blurred, dark, and moody, with soft sunlight leaks. Shot in vintage cinematic photography,
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p80', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/81.webp">
+    <div class="prompt-box" id="p81">
+  21-year-old skinny guy, well-built, urban fashion editorial. sharp chin, full sleeve white Print shirt red, black jeans, white sneakers, light smartwatch on left wrist. Sports bike near to him. Bold, Instagram influencer vibe, casual pose (standing on the side of the road and leaning on a wooden divider, looking confidently at the camera). Blurred mountain background, natural light, high contrast, Gen Z aesthetic. Slim body, Wearing black sunglasses. the man has the same face,
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p81', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/82.webp">
+    <div class="prompt-box" id="p82">
+   A high-contrast cinematic black-and-white portrait of the same man from the reference image, 
+short styled hair, groomed beard, masculine facial structure, realistic skin texture.
+He is sitting on a simple chair in an open field, wearing a dark utility jacket and sunglasses.
+Directly behind him stands a massive, powerful dark horse, perfectly centered, towering over the man.
+The horse’s mane is blowing intensely in the wind, adding motion and drama.Moody atmosphere, dramatic lighting, strong shadows, grainy 35mm film texture,
+sharp focus on the man’s face, shallow depth of field,
+editorial fashion photography, ultra-realistic, cinematic composition. Wearing glasses 
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p82', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/83.webp">
+    <div class="prompt-box" id="p83">
+  Render an 8K ultrarealistic close shot of a man with fair skin (face characteristics 100% same as uploaded image) with windswept black hair partially covering one eye. A sharp diagonal natural light beam illuminates his elevated gaze, showcasing his light irises, high cheekbones, and natural color lips. Deep shadows envelop the rest of his face and the environment, creating a dark, cinematic,
+editorial mood
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p83', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/84.webp">
+    <div class="prompt-box" id="p84">
+  Dark noir portrait of a handsome young man sitting alone in a shadowy café, wearing a dark blazer and wristwatch. Sunlight barely enters the room. Use uploaded image as facial reference, exact match required. Overhead angle, detective-film vibe.",
+ "size": "1024x1024",
+ "n": 1
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p84', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/85.webp">
+    <div class="prompt-box" id="p85">
+  Convert this image into a Fine black and white photography of a handsome young man (take reference face as uploaded image face)with dark, he is sitting on the chair tilted back in a moment of intense creative thought or ecstasy. He is wearing open, loose white collared shirt, standing in a dimly lit study filled with stacks of books and papers. The image is captured with a slow shutter speed, creating dramatic horizontal motion blur that streaks the background and the edges of his form.
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p85', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/86.webp">
+    <div class="prompt-box" id="p86">
+   This is an ultra-realistic, high-quality portrait of a man, preserving his unique physiognomy, age, gender, skin tone, hair, glasses, and expression.
+Detail:
+The main subject is a man with dark brown hair that is loose and slightly disheveled. His hair is intensely backlit, creating a golden halo that contrasts sharply with the dark background.
+Expression and Pose: He turns his face toward the camera, keeping it straight but partially in shadow. His mouth is slightly open.
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p86', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/87.webp">
+    <div class="prompt-box" id="p87">
+   a young boy like in Reference photo ,make realistic photo take actual face hair style.. make a portrait,
+A stylish man wearing a black turtleneck sweater and dark sunglasses sits confidently on a black wooden chair. He has neatly groomed hair and a beard, posing against a dramatic two-tone background—half vibrant red and half deep black. The lighting creates a moody, cinematic effect, emphasizing his cool and confident demeanor
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p87', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/88.webp">
+    <div class="prompt-box" id="p88">
+   A cinematic portrait of a man wearing a dark elegant three-piece suit with a white shirt and black tie, standing in a dimly lit environment. He is lighting a cigar with a metallic lighter, and thick smoke swirls dramatically around his head. The lighting is low-key and moody, focusing on the warm glow of the flame against the dark background. The man wears round sunglasses and has a calm, confident expression. The atmosphere is mysterious, classy, and cinematic with strong contrast and rich tone
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p88', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/89.webp">
+    <div class="prompt-box" id="p89">
+   A cinematic ultra-realistic prison cafeteria scene during mealtime, featuring a man (attached photo — face locked 100% identical, no reinterpretation, same facial structure, skin texture, pores, expression fidelity). He sits at a long metal dining table inside a crowded penitentiary hall, surrounded by other inmates, but the focus remains naturally on him without posing.Appearance: short uneven buzz-cut hair grown out irregularly, slightly longer on top, sides thinner, with a small scar visible on the scalp. Face shows controlled, cold confidence — calm, dominant, bored. Facial tattoos are realistic and restrained: small script on the temple, a subtle symbol near the eye, thin linework along the jaw, and a neck tattoo rising slightly toward the jawline, authentic Mexican-mafia inspired style, not exaggerated, not caricature.Wardrobe: standard prison-issued ORANGE inmate uniform, slightly faded and worn from daily use. Short-sleeve orange prison shirt slightly unbuttoned at the collar, sleeves loosely rolled, visible fabric creases, stains, and discoloration consistent with long-term incarceration. Matching orange prison pants partially visible. No accessories beyond what is realistic inside prison. Action & body language: candid, unstaged moment — one hand holding a metal spoon over a tray of simple prison food (rice, vegetables, protein), the other resting casually on the table. Shoulders relaxed, posture confident. He is not looking at the camera — his gaze is angled sideways toward another inmate or a guard, implying silent authority.Environment: large prison dining hall with long steel tables, other inmates in matching orange uniforms eating, some glancing subtly toward him, others focused on their meals. Guards visible in the background but out of focus. Concrete walls with peeling paint, water stains, industrial ceiling fans, flickering fluorescent lights, a large wall clock indicating meal time. No documentary feel — this is a narrative film scene. light creating strong contrast on face and tattoos, emphasizing realism. No fog, no haze. Natural gritty shadows, realistic skin tones.Camera: slightly low angle as if observed from another table, medium-full body framing, shallow depth of field isolating the subject naturally. Motion frozen mid-action, not posed.
+Mood: tense, controlled, cinematic crime-drama atmosphere — the presence of a quiet leader inside confinement, powerful without exaggeration. Style: ultra-photorealistic, cinematic realism, film still quality, candid moment, sharp skin texture, fabric fibers, metal reflections, 8K ultra detail.
+
+
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p89', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/90.webp">
+    <div class="prompt-box" id="p90">
+  “Full-body realistic cinematic portrait of the same man as the reference image, face and facial features unchanged. Side-walking pose while looking back over the shoulder. Wearing an all-black outfit with a long black style garment and brown shirt. Same hairstyle as reference, modern textured hair, sunglasses on. London tower background. Studio lighting, high realism, sharp focus, cinematic color grading. 9:16 aspect ratio, full HD, fashion editorial style.”
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p90', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/91.webp">
+    <div class="prompt-box" id="p91">
+  A Uploaded image cinematic portrait of a rugged man standing on a balcony, viewed from a low angle. He wears a dark denim shirt with rolled sleeves, a belt, and aviator sunglasses. His hair is thick and voluminous with a retro 1980s style, and he has a full beard and mustache. One arm rests confidently on the balcony railing while the other touches a white pillar. The scene uses dramatic lighting with a bold, textured deep-red background replacing the sky.
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p91', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/92.webp">
+    <div class="prompt-box" id="p92">
+  High-contrast black and white photo taken with a 1990s disposable camera at a dark house party. rty. A handso young man with dark, curly hair and a sharp jawline is staring directly into the lens. Focus on the eyes: intense, light-colored irises with a piercing, predatory gaze, slightly heavy-lidded (siren eyes), reflecting the harsh camera flash. He is wearing a black button-down shirt. The image is grainy, lo-fi, with a "dark academia" bad boy aesthetic.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p92', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/93.webp">
+    <div class="prompt-box" id="p93">
+  Ultra-realistic cinematic close-up of a dark futuristic sorcerer wearing a deep hooded cloak, intense glowing green magical energy flowing from his armored hand.
+His face is rugged and battle-worn with scars, stubble beard, sharp piercing eyes filled with rage and power.
+Dramatic green light reflecting across his skin, highlighting every wrinkle, scar, and pore.
+He looks directly at the viewer with a cold, deadly expression.
+Green energy particles and light streaks flying through the air creating a powerful motion effect.
+The background is dark, foggy and filled with glowing emerald bokeh lights, giving a sci-fi fantasy atmosphere.
+Shot in IMAX cinematic style, shallow depth of field, dramatic rim lighting, high contrast, ultra-detailed skin texture, realistic fabric folds on the cloak, metallic armor reflections.
+Looks like a Hollywood movie still, dark fantasy + sci-fi fusion, epic, intense, powerful, mystical.
+8K resolution, hyper-realistic, RAW photo look, professional cinema camera, 85mm lens, f/1.8, cinematic color grading, volumetric lighting, HDR, ultra sharp focus.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p93', this)">📋 Copy Prompt</button>
+  </div>
+
+
+
+  <div class="card">
+    <img src="chat images/94.webp">
+    <div class="prompt-box" id="p94">
+  Ultra-realistic cinematic movie poster of a rugged Indian male anti-hero standing in sharp side profile, facing right.
+He has thick, messy, naturally wavy black hair with volume and a slightly wild texture.
+He has a full dense beard and mustache, slightly untrimmed, giving a raw masculine look.
+Strong jawline, sharp nose, intense deep-set eyes, calm but dangerous expression, brooding and serious.
+His skin tone is warm brown with realistic pores, skin texture,subtle imperfections and stubble detail.
+Neck and chest hair visible for natural realism.
+He is wearing a black tailored suit jacket over a black partially unbuttoned shirt, revealing chest hair.
+No tie. No accessories. Clean but rugged luxury style.
+The background is bright white with a soft blurred road and yellow lane markings, creating a motion-blur highway effect symbolizing speed, fate, danger and destiny.
+Background is slightly foggy, desaturated and cinematic.
+Lighting:
+Soft cinematic daylight coming from the front and side, creating gentle shadows that sculpt the face and beard.
+A subtle rim light outlines the hair and jawline for depth and drama.
+Camera:
+Shot on a professional cinema camera, 85mm lens, shallow depth of field, sharp focus on face, creamy cinematic bokeh background.
+Color grading:
+Moody neutral tones with clean whites, deep blacks, cinematic contrast, Hollywood movie-poster style.
+Mood:
+Powerful, confident, mysterious, anti-hero energy, dangerous and charismatic.
+Text style (optional):
+Minimal bold movie typography on the left, dramatic clean layout like a Bollywood Hollywood crossover poster.
+Quality tags:
+Ultra-realistic, 8K, hyper-detailed, cinematic, IMAX look, HDR, film still, professional studio lighting, photoreal, RAW photo texture, no cartoon, no CGI look.
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p94', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/95.png">
+    <div class="prompt-box" id="p95">
+   "Photorealistic central man (exact match to reference: masculine facial features, hair, expression, skin tone, body) front-facing camera in stoic clasped-hands pose, surrounded by six identical male clones in single-file line behind, clones leaning heads out symmetrically left/right in cascading fan pattern for all seven faces fully visible, everyone in varied random men’s streetwear (hoodies, graphic tees, baggy pants, sneakers, jackets, caps in mixed colors/styles), soft professional￼ studio ighting, plain light grey seamless background, high-contrast symmetrical composition, surreal multiplicity effect, ultra-sharp 8k fabric/texture details, cinematic fashion editorial vibe --ar 4:5 portrait--stylize 300". ctto:
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p95', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/96.jpg">
+    <div class="prompt-box" id="p96">
+  Photograph me sitting low on a minimalist metal stool, legs spread forward in a relaxed, grounded pose, feet planted on uneven outdoor terrain. One hand loosely resting between the knees holding thin leather reins, shoulders slightly slouched, head tilted downward in a calm, introspective expression.
+
+The subject wears dark oversized layered clothing, wide-leg trousers, leather boots, and dark sunglasses. A strong black horse stands closely behind the seated figure, aligned protectively and partially overlapping the subject's silhouette. Open natural landscape with rough ground and wild grass, bright overexposed sky creating strong negative space. High contrast lighting, deep blacks, soft highlights, matte texture. Timeless, cinematic mood. Medium-format film look, subtle grain, monochrome fine-art fashion editorial, avant-garde luxury photography. don't harm the quality of the picture give me in 1080p quality
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p96', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/97.png">
+    <div class="prompt-box" id="p97">
+  long-exposure editorial portrait of a person(Take 100% face reference from the attached photo) facing camera at three-quarter angle, neutral serious expression, eyes looking directly forward, hair slicked back tightly, sharp primary face anchored in center while a translucent secondary face drifts upward and slightly left in vivid red motion blur, strong chromatic ghosting effect, layered double exposure created by real optical motion not digital smear, red and coral light streaks passing acrosshe face and torso, warm orange top with smooth fabric texture, cool blue dusk background with soft horizon line and faint trees far behind, cinematic color contrast between cool cyan environment and warm red motion trails, face structure clean and intact with no duplicated eyes or mouths, blur applied only to motion layer, high-end fashion photography, experimental long shutter portrait, realistic light bleed, subtle film grain, no CGI, no painterly look, no plastic skin, no distortion --ar 4:5
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p97', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/98.png">
+    <div class="prompt-box" id="p98">
+  Generate A striking, high-contrast black and white cinematic street portrait captured with a Leica M Monochrom and an 85mm f/1.2 lens, featuring a man with uploaded face as reference standing perfectly still amidst a chaotic urban environment The subject is rendered in razor-sharp focus, displaying intricate skin texture, a short rugged beard, and voluminous, tousled dark wavy hair caught in a light breeze, wearing a heavy, textured dark wool overcoat layered over a dark crewneck The composition utilizes a deliberate long-exposure technique where the surrounding crowd and city lights are transformed into ghostly, horizontal motion-blurred streaks and silky bokeh trails, creating a surreal sense of isolation and stillness within the bustle. The lighting is dramatic and moody, utilizing available street ambience to create deep shadows and soft highlights on the face, with a fine film grain texture, 8k resolution, and photorealistic raytraced quality emphasizing the tactile weave of the 
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p98', this)">📋 Copy Prompt</button>
+  </div>
+
+
+  <div class="card">
+    <img src="chat images/99.webp">
+    <div class="prompt-box" id="p99">
+  A futuristic portrait of a uploaded person wearing bright translucent yellow glasses, glowing with neon reflections. the face and clothing are illuminated by projected math formulas and equations, creating a holographic text-glow effect across the skin and jckt. Vibrant cyan and golden lighting, shallow depth of field, high-detail facial features, glossy surfaces, soft bokeh background. Cyber-aesthetic, cinematic lighting, ultra-realistic photography mixed with sci-fi holographic overlays.
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p99', this)">📋 Copy Prompt</button>
+  </div>
+
+
+
+  <div class="card">
+    <img src="chat images/100.png">
+    <div class="prompt-box" id="p100">
+  utilizes a deliberate long-exposure technique where the surrounding crowd and city lights are transformed into ghostly, horizontal motion-blurred streaks and silky bokeh trails, creating a surreal sense of isolation and stillness within the bustle. The lighting is dramatic and moody, utilizing available street ambience to create deep shadows and soft highlights on the face, with a fine film grain texture, 8k resolution, and photorealistic raytraced quality emphasizing the tactile weave of the 
+
+    </div>
+  <button class="copy-btn" onclick="copyPrompt('p100', this)">📋 Copy Prompt</button>
+  </div>
+
+
+
+
+</div>
+
+<!-- BACK BUTTON -->
+<button class="back-btn" onclick="goBack()">
+  <span class="back-icon"></span>
+  <span class="back-text">Back</span>
+</button>
+
+
+<script>
+function copyPrompt(id, btn){
+  navigator.clipboard.writeText(
+    document.getElementById(id).innerText
+  );
+
+  btn.innerText = "✅ Copied!";
+  btn.classList.add("copied");
+
+  setTimeout(()=>{
+    btn.innerText = "📋 Copy Prompt";
+    btn.classList.remove("copied");
+  },1200);
+}
+
+function toggleMode(){
+  document.body.classList.toggle("dark");
+}
+
+function goBack(){
+  window.location.href = "index.html";
+}
+
+function toggleMode(){
+  const isDark = document.body.classList.toggle("dark");
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+}
+
+(function(){
+  const savedTheme = localStorage.getItem("theme");
+  if(savedTheme === "dark"){
+    document.body.classList.add("dark");
+    const toggle = document.getElementById("themeToggle");
+    if(toggle) toggle.checked = true;
+  }
+})();
+
+
+</script>
+
+</body>
+</html>
